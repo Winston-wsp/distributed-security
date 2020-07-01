@@ -49,7 +49,7 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
         .scopes("all")// 允许的授权范围
         .autoApprove(false)
         // 加上验证回调地址
-        .redirectUris(("http:www.baidu.com"));
+        .redirectUris(("http://www.baidu.com"));
     }
 
     // 令牌管理服务
