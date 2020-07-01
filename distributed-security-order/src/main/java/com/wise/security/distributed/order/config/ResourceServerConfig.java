@@ -1,5 +1,6 @@
 package com.wise.security.distributed.order.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,6 +10,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 
 /**
  * @author: Winston
@@ -19,11 +21,14 @@ import org.springframework.security.oauth2.provider.token.ResourceServerTokenSer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     public static final String RESOURCE_ID = "res1";
+    @Autowired
+    TokenStore tokenStore;
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
         resources.resourceId(RESOURCE_ID)// 资源id
-                .tokenServices(tokenService()) // 验证令牌的服务
+                .tokenStore(tokenStore) // 验证令牌的服务
+//                .tokenServices(tokenService()) // 验证令牌的服务
                 .stateless(true);
     }
 
@@ -39,7 +44,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     }
 
     // 资源服务令牌解析服务
-    @Bean
+ /*   @Bean
     public ResourceServerTokenServices tokenService(){
         // 使用远程服务请求授权服务器校验token，必须制定校验token的url、client_id、client_secret
         RemoteTokenServices service = new RemoteTokenServices();
@@ -47,5 +52,5 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         service.setClientId("c1");
         service.setClientSecret("secret");
         return service;
-    }
+    }*/
 }
