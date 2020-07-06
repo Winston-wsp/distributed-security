@@ -1,5 +1,6 @@
 package com.wise.security.distributed.uaa.service;
 
+import com.alibaba.fastjson.JSON;
 import com.wise.security.distributed.uaa.dao.UserDao;
 import com.wise.security.distributed.uaa.model.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +29,17 @@ public class SpringDataUserDetailsService implements UserDetailsService {
 
         // 去数据库查询用户信息
         UserDto user = userDao.getUserByUsername(username);
-        if(user == null){
+        if (user == null) {
             return null;
         }
         // 从数据库中获取权限
         List<String> permissionByUserId = userDao.findPermissionByUserId(user.getId());
         String[] arr = new String[permissionByUserId.size()];
         String[] authorities = permissionByUserId.toArray(arr);
-        UserDetails userDetails = User.withUsername(user.getUsername()).password(user.getPassword()).authorities(authorities).build();
+        // 将userDto转成json
+        String principal = JSON.toJSONString(user);
+        UserDetails userDetails = User.withUsername(principal).password(user.getPassword()).authorities(authorities).build();
+//        UserDetails userDetails = User.withUsername(user.getUsername()).password(user.getPassword()).authorities(authorities).build();
 
         return userDetails;
     }
